@@ -48,7 +48,7 @@ def handle_client(conn, addr):
                 else:                      # Modulo
                     fmt = 'H'
                 response = pack('!B' + fmt, 0, result)
-                break
+            break
         except Exception as e:
             print(e)
             response = pack('!B', 3)

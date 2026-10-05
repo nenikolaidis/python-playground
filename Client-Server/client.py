@@ -15,7 +15,6 @@ def send_request(operation_type, num1, num2, num3, num4):
 
     if operation_type == 1:  # Addition
         request = pack('!BHHHH', operation_type, num1, num2, num3, num4)
-        print(request)
     elif operation_type == 4:  # Multiplication
         request = pack('!BHHH', operation_type, num1, num2, num3)
     else:
@@ -40,7 +39,7 @@ def send_request(operation_type, num1, num2, num3, num4):
         result = unpack('!'+fmt, clientSocket.recv(8))[0]
         print("Result:", result)
     else:
-        print(errors[(success[0] - 1)])
+        print(errors[success - 1])
 
     clientSocket.close()
 

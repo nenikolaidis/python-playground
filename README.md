@@ -1,110 +1,73 @@
-# Python Projects Collection
+# python-playground
 
-This repository contains several small Python projects and challenge solutions grouped by topic. The goal of this README is to give you a clear, copy‑pasteable starting point so others (and future you) can run, test, and contribute to the code.
+Small Python programs I wrote while learning: networking, cryptography challenges, competitive programming and algorithm exercises.
 
-> **Overview**
->
-> * `Client-Server/` — simple client/server examples (TCP/UDP, basic RPC patterns, toy protocols).
-> * `Cryptohack/` — cryptography challenge solutions and experiments (CTF-style puzzles).
-> * `Exercises/` — practice scripts, algorithms, and utility snippets.
-> * `IEEExtreme/` — competition solutions and problem writeups for IEEEXtreme.
+## Setup
 
----
-
-## Quick start
-
-1. Install Python (recommended: **Python 3.10+**).
-2. Create and activate a virtual environment:
+Requires Python 3.10+.
 
 ```bash
-python -m venv .venv
-# macOS / Linux
-source .venv/bin/activate
-# Windows (PowerShell)
-.\.venv\Scripts\Activate.ps1
+python3 -m venv .venv
+source .venv/bin/activate        # Windows: .\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt  # only needed for the Cryptohack scripts
 ```
 
-3. Install dependencies (if a `requirements.txt` exists at repo root):
+## Contents
 
-```bash
-pip install -r requirements.txt
-```
+### `Client-Server/` — binary-protocol calculator over TCP
 
-If a folder has its own `requirements.txt`, `cd` into that folder and install from there.
-
----
-
-## Project folders & how to run
-
-> These sections provide generic run instructions. Replace the example filenames with the actual scripts present in each folder.
-
-### `Client-Server/`
-
-Typical contents: `server.py`, `client.py` (or subfolders per protocol).
-
-Run the server in one terminal:
+| File | What it does |
+| --- | --- |
+| `server.py` | Multi-threaded TCP server on `localhost:12345`. Receives an operation and its numbers packed with `struct`, returns the result or an error code. |
+| `client.py` | Interactive client: pick an operation (addition, subtraction, division, multiplication, modulo), enter the numbers, get the result. |
 
 ```bash
 cd Client-Server
-python server.py
+python3 server.py     # terminal 1
+python3 client.py     # terminal 2
 ```
 
-Run a client in another terminal:
+### `Cryptohack/` — [CryptoHack](https://cryptohack.org) introductory challenges
 
-```bash
-cd Client-Server
-python client.py --host 127.0.0.1 --port 9000
-```
-
-If the folder contains multiple examples, prefer running each example file the same way (e.g. `server_tcp.py`, `client_tcp.py`) and check for help flags (`-h`, `--help`).
-
-### `Cryptohack/`
-
-Collection of cryptography challenge solves. Example usage:
+| File | Challenge |
+| --- | --- |
+| `XOR_starter.py` | XOR every character of a string with 13 |
+| `favourite_byte.py` | Brute-force a single-byte XOR key |
+| `XOR_properties.py` | Recover a flag using XOR's associative/self-inverse properties |
+| `bytes_and_big_integers.py` | Convert a big integer back to bytes |
+| `network_attacks.py` | Talk to a CryptoHack server with JSON over a socket |
 
 ```bash
 cd Cryptohack
-python solve_challenge_name.py
+python3 favourite_byte.py
 ```
 
-Note: some scripts require third-party crypto libraries (e.g. `pycryptodome`, `cryptography`) — see `requirements.txt` in this folder.
+### `IEEExtreme/` — [IEEEXtreme](https://ieeextreme.org) competition problems
 
-### `Exercises/`
+Both solutions read from standard input and print to standard output.
 
-Small scripts and algorithm practice. Run any script directly:
+| File | Problem |
+| --- | --- |
+| `war_games.py` | Simulate the card game War for each test case; print the winner or `draw` if the game loops. |
+| `restaurant_cipher.py` | For each message, print (in uppercase) the most frequent letter among `a`–`g`. |
+
+```bash
+cd IEEExtreme
+printf '1\n2 3 A\nK 4 5\n' | python3 war_games.py
+```
+
+### `Exercises/` — algorithm practice
+
+| File | What it does |
+| --- | --- |
+| `ex1_sudoku.py` | Backtracking sudoku solver that picks the cell with the fewest options first; prints the solved board and the number of backtracking steps. |
+| `ex2_stockstrategy.py` | Simulates a random stock market over several days and tests a simple buy/sell strategy. |
 
 ```bash
 cd Exercises
-python example_exercise.py
+python3 ex1_sudoku.py
 ```
 
-If there are multiple independent exercises, consider grouping them into subfolders and adding an index `README` inside `Exercises/` listing the filename → purpose.
+## License
 
-### `IEEExtreme/`
-
-Competition problem solutions. Typically each problem has a folder or a single file.
-
-Run a solution like this:
-
-```bash
-cd IEEExtreme/problem_code
-python solution.py < input.txt
-```
-
-Add short problem descriptions and expected input/output samples next to each solution to make it easy to reproduce.
-
----
-
-## Testing
-
-Add a `tests/` folder (or per-project tests) and run with `pytest`:
-
-```bash
-pip install pytest
-pytest -q
-```
-
-If you already have tests, run `pytest` from the repo root.
-
----
-
+[MIT](LICENSE.md)

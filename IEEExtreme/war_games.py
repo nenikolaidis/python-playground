@@ -36,10 +36,8 @@ def play_war_game(player1_cards, player2_cards):
             player2_cards.append(card2)
         elif card1 > card2:
             player1_cards.extend([card2])
-            print('player 1:',player1_cards)
         else:
             player2_cards.extend([card1])
-            print('player 2:',player2_cards)
 
     if not player1_cards:
         return "player 2"
@@ -48,13 +46,7 @@ def play_war_game(player1_cards, player2_cards):
     else:
         return "draw"
 
-while True:
-    n= int(input())
-    if 1 <= n <= 25:
-        break
-    else:
-        print("Invalid input.")
-
+n = int(input())
 
 for i in range(n):
     player1_cards = input().split()

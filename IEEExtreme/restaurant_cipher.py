@@ -1,20 +1,5 @@
-
-while True:
-    n = int(input())
-    if 1 <= n <= 20:
-        break
-    else:
-        print("Invalid input.")
-
-messages = []
-for i in range(n):
-    while True:
-        message = input()
-        if all(c.islower() or c.isspace() or c in '.,!?;:' for c in message) and len(message) <= 50000:
-            messages.append(message)
-            break
-        else:
-            print("Invalid message. Messages should consist of lowercase letters, spaces, and punctuation, and be at most 50,000 characters.")
+n = int(input())
+messages = [input() for _ in range(n)]
 
 
 def most_frequent_lowercase_to_uppercase(text):

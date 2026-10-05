@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Editors / OS
+tempCodeRunnerFile.py
+.vscode/
+.idea/
+.DS_Store
