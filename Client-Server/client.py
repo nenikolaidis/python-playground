@@ -1,84 +1,60 @@
-from socket import *
 from struct import pack, unpack
+import socket
 
-errors = (
-    "Division by 0 error",
-    "Modulo by 0 error",
-    "Unknown error"
-)
+from protocol import (HOST, PORT, OPERATIONS, ERRORS, SUCCESS, UNKNOWN_ERROR,
+                      recv_exact, result_size)
 
-def send_request(operation_type, num1, num2, num3, num4):
-    global errors
 
-    clientSocket = socket(AF_INET, SOCK_STREAM)
-    clientSocket.connect(('localhost', 12345))
+def send_request(operation_type, numbers):
+    """Send one request and return (status, result)."""
+    operand_fmt, result_fmt = OPERATIONS[operation_type][1:3]
 
-    if operation_type == 1:  # Addition
-        request = pack('!BHHHH', operation_type, num1, num2, num3, num4)
-    elif operation_type == 4:  # Multiplication
-        request = pack('!BHHH', operation_type, num1, num2, num3)
-    else:
-        request = pack('!BHH', operation_type, num1, num2)
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
+        client_socket.connect((HOST, PORT))
+        client_socket.sendall(pack('!B' + operand_fmt, operation_type, *numbers))
 
-    clientSocket.sendall(bytes(request))
+        status = unpack('!B', recv_exact(client_socket, 1))[0]
+        if status != SUCCESS:
+            return status, None
+        result = unpack('!' + result_fmt, recv_exact(client_socket, result_size(operation_type)))[0]
+        return status, result
 
-    success = unpack('!B', clientSocket.recv(1))[0]
 
-    if success == 0:
-        fmt = None
-        if operation_type == 1:  # Addition
-            fmt = 'I'
-        elif operation_type == 2:  # Subtraction
-            fmt = 'h'
-        elif operation_type == 3:  # Division
-            fmt = 'd'
-        elif operation_type == 4:  # Multiplication
-            fmt = 'Q'
-        else:                      # Modulo
-            fmt = 'H'
-        result = unpack('!'+fmt, clientSocket.recv(8))[0]
-        print("Result:", result)
-    else:
-        print(errors[success - 1])
-
-    clientSocket.close()
-
-while True:
-    try:
-        operation = int(input("Select an operation (1: Addition, 2: Subtraction, 3: Division, 4: Multiplication, 5: Modulo): "))
-        if 1 <= operation <= 5:
-            break
-        else:
-            print("Invalid operation. Please try again.")
-    except ValueError:
+def ask_operation():
+    menu = ", ".join(f"{code}: {name}" for code, (name, *_) in OPERATIONS.items())
+    while True:
+        try:
+            operation = int(input(f"Select an operation ({menu}): "))
+            if operation in OPERATIONS:
+                return operation
+        except ValueError:
+            pass
         print("Invalid operation. Please try again.")
 
-if operation == 1:  # Addition
-    while True: 
-        num1 = int(input("Enter the first number: "))
-        num2 = int(input("Enter the second number: "))
-        num3 = int(input("Enter the third number: "))
-        num4 = int(input("Enter the fourth number: "))
-        if 0 <= num1 <= 60000 and 0 <= num2 <= 60000 and 0 <= num3 <= 60000 and 0 <= num4 <= 60000:
-            send_request(operation, num1, num2, num3, num4)
-            break
-elif operation == 4:  # Multiplication
+
+def ask_numbers(operation_type):
+    _, operand_fmt, _, max_value = OPERATIONS[operation_type]
+    ordinals = ("first", "second", "third", "fourth")
     while True:
-        num1 = int(input("Enter the first number: "))
-        num2 = int(input("Enter the second number: "))
-        num3 = int(input("Enter the third number: "))
-        if 0 <= num1 <= 60000 and 0 <= num2 <= 60000 and 0 <= num3 <= 60000:
-            send_request(operation, num1, num2, num3, None)
-            break
-else:
-    while True:
-        num1 = int(input("Enter the first number: "))
-        num2 = int(input("Enter the second number: "))
-        if operation != 2:
-            if 0 <= num1 <= 60000 and 0 <= num2 <= 60000:
-                send_request(operation, num1, num2, None, None)
-                break
-        else:
-            if 0 <= num1 <= 30000 and 0 <= num2 <= 30000:
-                send_request(operation, num1, num2, None, None)
-                break
+        try:
+            numbers = [int(input(f"Enter the {ordinals[i]} number: ")) for i in range(len(operand_fmt))]
+        except ValueError:
+            print("Please enter whole numbers.")
+            continue
+        if all(0 <= n <= max_value for n in numbers):
+            return numbers
+        print(f"Numbers must be between 0 and {max_value}. Please try again.")
+
+
+def main():
+    operation = ask_operation()
+    numbers = ask_numbers(operation)
+    status, result = send_request(operation, numbers)
+    if status == SUCCESS:
+        print("Result:", result)
+    else:
+        print(ERRORS.get(status, ERRORS[UNKNOWN_ERROR]))
+
+
+if __name__ == "__main__":
+    main()

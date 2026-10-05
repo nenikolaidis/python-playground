@@ -1,5 +1,5 @@
 # Given board
-board = [
+EXAMPLE_BOARD = [
     [5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 0, 0, 0, 0],
     [0, 9, 8, 0, 0, 0, 0, 6, 0],
@@ -73,12 +73,17 @@ def solve_sudoku(board):
     
     return False
 
-#Main
-if solve_sudoku(board):
-    print("Solved Board:")
-    for row in board:
-        print(row)
-else:
-    print("No solution exists.")
+def main():
+    board = [row[:] for row in EXAMPLE_BOARD]
+    if solve_sudoku(board):
+        print("Solved Board:")
+        for row in board:
+            print(row)
+    else:
+        print("No solution exists.")
 
-print("Backtracking steps:", count)
+    print("Backtracking steps:", count)
+
+
+if __name__ == "__main__":
+    main()

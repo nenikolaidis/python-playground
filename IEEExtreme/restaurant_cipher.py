@@ -1,20 +1,16 @@
-n = int(input())
-messages = [input() for _ in range(n)]
-
-
 def most_frequent_lowercase_to_uppercase(text):
     lowercase = 'abcdefg'
     uppercase = 'ABCDEFG'
     f = {}
 
     for c in text:
-        if c.islower() and c in lowercase:
+        if c in lowercase:
             if c in f:
                 f[c] += 1
             else:
                 f[c] = 1
 
-    if not f:  # No lowercase letters found
+    if not f:  # No letters a-g found
         return None
 
     most_frequent_lower = max(f, key=f.get)
@@ -23,6 +19,11 @@ def most_frequent_lowercase_to_uppercase(text):
     return most_frequent_upper
 
 
-for i in range(n):
-    result = most_frequent_lowercase_to_uppercase(messages[i])
-    print(result)
+def main():
+    n = int(input())
+    for _ in range(n):
+        print(most_frequent_lowercase_to_uppercase(input()))
+
+
+if __name__ == "__main__":
+    main()

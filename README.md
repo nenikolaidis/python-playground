@@ -9,7 +9,7 @@ Requires Python 3.10+.
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate        # Windows: .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt  # only needed for the Cryptohack scripts
+pip install -r requirements.txt  # Cryptohack scripts and tests
 ```
 
 ## Contents
@@ -20,6 +20,7 @@ pip install -r requirements.txt  # only needed for the Cryptohack scripts
 | --- | --- |
 | `server.py` | Multi-threaded TCP server on `localhost:12345`. Receives an operation and its numbers packed with `struct`, returns the result or an error code. |
 | `client.py` | Interactive client: pick an operation (addition, subtraction, division, multiplication, modulo), enter the numbers, get the result. |
+| `protocol.py` | Shared by both sides: operation codes, `struct` formats, error codes and the calculation itself. |
 
 ```bash
 cd Client-Server
@@ -67,6 +68,14 @@ printf '1\n2 3 A\nK 4 5\n' | python3 war_games.py
 cd Exercises
 python3 ex1_sudoku.py
 ```
+
+## Tests
+
+```bash
+python3 -m pytest
+```
+
+The tests in `tests/` cover the client/server protocol, the IEEEXtreme solutions, the sudoku solver, the stock trading signals and the XOR starter.
 
 ## License
 

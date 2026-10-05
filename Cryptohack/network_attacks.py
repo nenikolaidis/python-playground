@@ -1,33 +1,31 @@
 #!/usr/bin/env python3
 
-from pwn import * # pip install pwntools
+from pwn import remote  # pip install pwntools
 import json
 
 HOST = "socket.cryptohack.org"
 PORT = 11112
 
-r = remote(HOST, PORT)
 
-
-def json_recv():
+def json_recv(r):
     line = r.readline()
     return json.loads(line.decode())
 
-def json_send(hsh):
+
+def json_send(r, hsh):
     request = json.dumps(hsh).encode()
     r.sendline(request)
 
 
-print(r.readline())
-print(r.readline())
-print(r.readline())
-print(r.readline())
+def main():
+    r = remote(HOST, PORT)
 
-request = {
-    "buy": "clothes"
-}
-json_send(request)
+    for _ in range(4):
+        print(r.readline())
 
-response = json_recv()
+    json_send(r, {"buy": "clothes"})
+    print(json_recv(r))
 
-print(response)
+
+if __name__ == "__main__":
+    main()

@@ -11,7 +11,8 @@ def transform_card(card):
         return 14
     else:
         return int(card)
-    
+
+
 def play_war_game(player1_cards, player2_cards):
     game_history = set()  # To track the game state and detect cycles
 
@@ -25,6 +26,7 @@ def play_war_game(player1_cards, player2_cards):
         # Check if the current game state is repeating
         if game_state in game_history:
             return "draw"
+
 
         game_history.add(game_state)
 
@@ -46,12 +48,14 @@ def play_war_game(player1_cards, player2_cards):
     else:
         return "draw"
 
-n = int(input())
 
-for i in range(n):
-    player1_cards = input().split()
-    
-    player2_cards = input().split()
+def main():
+    n = int(input())
+    for _ in range(n):
+        player1_cards = input().split()
+        player2_cards = input().split()
+        print(play_war_game(player1_cards, player2_cards))
 
-    result = play_war_game(player1_cards, player2_cards)
-    print(result)
+
+if __name__ == "__main__":
+    main()
