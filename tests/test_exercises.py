@@ -16,7 +16,6 @@ def test_solves_example_board():
     board = [row[:] for row in EXAMPLE_BOARD]
     assert solve_sudoku(board)
     assert is_solved(board)
-    # The given numbers must not change.
     for r in range(9):
         for c in range(9):
             if EXAMPLE_BOARD[r][c]:
@@ -24,15 +23,15 @@ def test_solves_example_board():
 
 
 def test_is_valid():
-    assert not is_valid(EXAMPLE_BOARD, 0, 2, 5)  # 5 already in the row
-    assert not is_valid(EXAMPLE_BOARD, 2, 0, 8)  # 8 already in the column
-    assert not is_valid(EXAMPLE_BOARD, 1, 1, 9)  # 9 already in the block
+    assert not is_valid(EXAMPLE_BOARD, 0, 2, 5)
+    assert not is_valid(EXAMPLE_BOARD, 2, 0, 8)
+    assert not is_valid(EXAMPLE_BOARD, 1, 1, 9)
     assert is_valid(EXAMPLE_BOARD, 0, 2, 4)
 
 
 def test_unsolvable_board():
     board = [row[:] for row in EXAMPLE_BOARD]
-    board[0][3] = 5  # duplicate 5 in row 0
+    board[0][3] = 5
     assert not solve_sudoku(board)
 
 

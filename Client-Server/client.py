@@ -6,7 +6,6 @@ from protocol import (HOST, PORT, OPERATIONS, ERRORS, SUCCESS, UNKNOWN_ERROR,
 
 
 def send_request(operation_type, numbers):
-    """Send one request and return (status, result)."""
     operand_fmt, result_fmt = OPERATIONS[operation_type][1:3]
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:

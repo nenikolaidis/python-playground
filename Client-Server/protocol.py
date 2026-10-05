@@ -1,16 +1,9 @@
-"""Wire format shared by client.py and server.py.
-
-Request:  1 byte operation code, then the operands as unsigned shorts.
-Response: 1 byte status (0 = success, otherwise an error code), then the
-          result packed with the operation's result format on success.
-"""
-
 from struct import calcsize
 
 HOST = 'localhost'
 PORT = 12345
 
-# code: (name, operand format, result format, max operand value)
+# code: (name, numbers format, result format, max number)
 OPERATIONS = {
     1: ("Addition",       'HHHH', 'I', 60000),
     2: ("Subtraction",    'HH',   'h', 30000),
@@ -32,7 +25,6 @@ ERRORS = {
 
 
 def calculate(operation_type, numbers):
-    """Return (status, result). result is None when status is an error."""
     if operation_type == 1:    # Addition
         return SUCCESS, sum(numbers)
     elif operation_type == 2:  # Subtraction
@@ -50,8 +42,8 @@ def calculate(operation_type, numbers):
     return UNKNOWN_ERROR, None
 
 
+#Reading until we get all the bytes
 def recv_exact(sock, size):
-    """recv() can return fewer bytes than asked for, so keep reading."""
     data = b''
     while len(data) < size:
         chunk = sock.recv(size - len(data))

@@ -28,11 +28,10 @@ def test_calculate_errors():
 
 
 def test_largest_results_fit_their_formats():
-    # pack() raises struct.error if a result doesn't fit its format.
     for code, (_, operand_fmt, result_fmt, max_value) in protocol.OPERATIONS.items():
         numbers = [max_value] * len(operand_fmt)
         if code == 2:
-            numbers = [0, max_value]  # most negative subtraction
+            numbers = [0, max_value]
         _, result = calculate(code, numbers)
         pack('!' + result_fmt, result)
 
@@ -64,7 +63,7 @@ def test_server_rejects_unknown_operation():
 
 def test_client_and_server_end_to_end(monkeypatch):
     listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    listener.bind(('localhost', 0))  # any free port
+    listener.bind(('localhost', 0))
     listener.listen()
     monkeypatch.setattr(client, "PORT", listener.getsockname()[1])
 
